@@ -22,11 +22,7 @@ const pricingcard = () => {
                 <h1 className="font-bold text-3xl">$99</h1>
                 <p className="text-gray-600">/Per Month</p>
               </div>
-              {/* <div className="pricing-amount bg-indigo-100 p-6 transition-colors duration-300">
-                <div className="">
-                  <span className="text-4xl font-semibold">$19</span> /year
-                </div>
-              </div> */}
+  
               <div className="p-6">
                 <ul className="leading-loose">
                   <li>
@@ -64,11 +60,7 @@ const pricingcard = () => {
                 <h1 className="font-bold text-3xl">$99</h1>
                 <p className="text-gray-600">/Per Month</p>
               </div>
-              {/* <div className="pricing-amount bg-indigo-100 p-6 transition-colors duration-300">
-                <div className="">
-                  <span className="text-4xl font-semibold">$19</span> /year
-                </div>
-              </div> */}
+
               <div className="p-6">
                 <ul className="leading-loose">
                   <li>
@@ -104,11 +96,7 @@ const pricingcard = () => {
                 <h1 className="font-bold text-3xl">$99</h1>
                 <p className="text-gray-600">/Per Month</p>
               </div>
-              {/* <div className="pricing-amount bg-indigo-100 p-6 transition-colors duration-300">
-                <div className="">
-                  <span className="text-4xl font-semibold">$19</span> /year
-                </div>
-              </div> */}
+  
               <div className="p-6">
                 <ul className="leading-loose">
                   <li>

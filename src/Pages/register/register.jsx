@@ -3,7 +3,7 @@ import Nav from "../../Components/navbar/nav";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth,db } from "../../firebase";
-import { Timestamp, addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { Timestamp, addDoc, getDoc, doc, setDoc } from "firebase/firestore";
 
 const register = () => {
   const [email, setEmail] = useState("");
@@ -27,6 +27,17 @@ const register = () => {
     await createUserWithEmailAndPassword(auth, email, password) .then(async (userCredential) => {
       // Signed in 
       const user = userCredential.user;
+
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnapshot = await getDoc(userDocRef);
+      const userData = userDocSnapshot.data();
+
+      // Get the `members` value from the user document
+      const members = userData && userData.members ? userData.members : false;
+      const credentials = `${email}:${password}:${members || false}`;
+
+      // Store credentials in local storage
+      localStorage.setItem("credentials", credentials);
       await setDoc(doc(db, `users`,user.uid), {
         member:false,
         createdAt: Timestamp.fromDate(new Date())

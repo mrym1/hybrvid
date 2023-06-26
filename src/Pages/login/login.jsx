@@ -3,7 +3,8 @@ import Nav from "../../Components/navbar/nav";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
+import { getDoc, doc } from "firebase/firestore";
 
 // import logo from "../../assets/logo.png";
 
@@ -18,26 +19,35 @@ const Login = () => {
     setError("");
 
     // Perform login action
-   
-      await signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
-          const user = userCredential.user;
-          // dispatch({ type: "LOGIN", payload: user });
 
-          // Concatenate email and password with a separator
-          const credentials = `${email}:${password}`;
+    await signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
 
-          // Store credentials in local storage
-          localStorage.setItem("credentials", credentials);
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        const userData = userDocSnapshot.data();
+
+        // Get the `members` value from the user document
+        const members = userData && userData.members ? userData.members : false;
+
+
+        const credentials = `${email}:${password}:${members}`;
+
+        // Store credentials in local storage
+        localStorage.setItem("credentials", credentials);
+        if (members === false) {
+          navigate("/checkout");
+        } else {
           navigate("/");
-          console.log(user);
-          // localStorage.setItem("email", email);
-          // localStorage.setItem("password", password);
         }
-      ).catch((error)=>{
+        console.log(user);
+
+      })
+      .catch((error) => {
         const errorCode = error.code;
         let errorMessage;
-  
+
         switch (errorCode) {
           case "auth/invalid-email":
             errorMessage = "Invalid email address.";
@@ -54,12 +64,10 @@ const Login = () => {
           default:
             errorMessage = "An error occurred during authentication.";
         }
-  
+
         // Display the error message to the user
         setError(errorMessage);
-
       });
- 
   };
 
   return (
@@ -78,14 +86,9 @@ const Login = () => {
                 HybrVid
               </span>
             </div>
-            {/* <span className="flex w-full text-lg uppercase font-bold mb-4 justify-center">
-              Login
-            </span> */}
             <form className="mb-4" action="/" method="post">
               <div className="mb-4 md:w-full">
-                {/* <label htmlFor="email" className="block text-xs mb-1">
-                  Email
-                </label> */}
+
                 <input
                   className="w-full border rounded p-2 outline-none focus:shadow-outline"
                   type="email"
@@ -99,9 +102,6 @@ const Login = () => {
                 />
               </div>
               <div className="mb-6 md:w-full">
-                {/* <label htmlFor="password" className="block text-xs mb-1">
-                  Password
-                </label> */}
                 <input
                   className="w-full border rounded p-2 outline-none focus:shadow-outline"
                   type="password"
@@ -126,7 +126,6 @@ const Login = () => {
             </form>
             <div className="flex justify-center">
               <p>Don't have an account?</p>
-              {/* <div className="ml-1"> */}
               <Link
                 to="/pricing"
                 className="ml-1"
@@ -136,10 +135,8 @@ const Login = () => {
                   Sign up here
                 </p>
               </Link>
-              {/* </p> */}
             </div>
             <Link to="/forgetpassword" style={{ textDecoration: "none" }}>
-              
               <p className="text-blue-700 text-center text-sm flex justify-center">
                 Forgot password?
               </p>

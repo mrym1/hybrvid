@@ -100,7 +100,7 @@ const nav = () => {
                   Login
                 </p>
               </Link>
-              <Link to="/pricing" style={{ textDecoration: "none" }}>
+              <Link to="/register" style={{ textDecoration: "none" }}>
                 <p className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4">
                   Register
                 </p>
