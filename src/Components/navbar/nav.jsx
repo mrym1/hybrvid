@@ -1,15 +1,35 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { signOut } from "firebase/auth";
 // import logo from '../../assets/logo.png';
 
 const nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if user credentials exist in local storage
+    const credentials = localStorage.getItem("credentials");
+    if (credentials) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   // const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogOut = async () => {
+    try {
+      var result = await signOut(auth);
+      console.log(result);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -52,21 +72,53 @@ const nav = () => {
           </button>
         </div>
       </div>
-      <div className={`md:inline-flex ${isMenuOpen ? "block mb-2 mt-8" : "hidden"}`}>
-        <div className="mt-3 md:mt-0 md:ml-4 md:flex mr-2">
+      <div
+        className={`md:inline-flex ${
+          isMenuOpen ? "block mb-2 mt-8" : "hidden"
+        }`}
+      >
+        {/* <div className="mt-3 md:mt-0 md:ml-4 md:flex mr-2">
           <Link to="/login" style={{ textDecoration: "none" }}>
-            <a
+            <p
               className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 -mx-4 mb-4"
-              href="#"
+             
             >
               Login
-            </a>
+            </p>
           </Link>
           <Link to="/pricing" style={{ textDecoration: "none" }}>
-            <a className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4">
+            <p className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4">
               Register
-            </a>
+            </p>
           </Link>
+        </div> */}
+        <div className="mt-3 md:mt-0 md:ml-4 md:flex mr-2">
+          {!isLoggedIn ? (
+            <>
+              <Link to="/login" style={{ textDecoration: "none" }}>
+                <p className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 -mx-4 mb-4">
+                  Login
+                </p>
+              </Link>
+              <Link to="/pricing" style={{ textDecoration: "none" }}>
+                <p className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4">
+                  Register
+                </p>
+              </Link>
+            </>
+          ) : (
+            <button
+              className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 -mx-4 mb-4"
+              onClick={() => {
+                // Perform logout action here
+                // Clear the user credentials from local storage and update isLoggedIn state
+                localStorage.removeItem("credentials");
+                setIsLoggedIn(false);
+              }}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </nav>

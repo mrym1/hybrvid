@@ -1,12 +1,12 @@
 import React from "react";
-import Payment from "../../Components/payment/payment";
+// import Payment from "../../Components/payment/payment";
 import Nav from "../../Components/navbar/nav";
 
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+// import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 // import PaymentForm from './PaymentForm';
 
-const stripePromise = loadStripe("pk_test_51L9OUFHYMywy7UqrbREXzmBj470OQskl4oqvdbc4YLsrU5L96GVEOMTKTP2zAl8P5QC8OF2j9mnLv5SsGJPEQgRa00Py746Mtn");
+// const stripePromise = loadStripe("pk_test_51L9OUFHYMywy7UqrbREXzmBj470OQskl4oqvdbc4YLsrU5L96GVEOMTKTP2zAl8P5QC8OF2j9mnLv5SsGJPEQgRa00Py746Mtn");
 
 const checkout = () => {
   return (
@@ -31,9 +31,9 @@ const checkout = () => {
         </div>
       </div>
       {/* </div> */}
-      <Elements stripe={stripePromise}>
+      {/* <Elements stripe={stripePromise}>
         <Payment />
-      </Elements>
+      </Elements> */}
     </div>
   );
 };

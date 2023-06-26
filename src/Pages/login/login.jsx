@@ -2,31 +2,64 @@ import React, { useState } from "react";
 import Nav from "../../Components/navbar/nav";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
+
 // import logo from "../../assets/logo.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Concatenate email and password with a separator
-    const credentials = `${email}:${password}`;
-
-    // Store credentials in local storage
-    localStorage.setItem("credentials", credentials);
-    navigate("/")
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
 
     // Perform login action
-    // ...
-  };
+   
+      await signInWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          const user = userCredential.user;
+          // dispatch({ type: "LOGIN", payload: user });
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+          // Concatenate email and password with a separator
+          const credentials = `${email}:${password}`;
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+          // Store credentials in local storage
+          localStorage.setItem("credentials", credentials);
+          navigate("/");
+          console.log(user);
+          // localStorage.setItem("email", email);
+          // localStorage.setItem("password", password);
+        }
+      ).catch((error)=>{
+        const errorCode = error.code;
+        let errorMessage;
+  
+        switch (errorCode) {
+          case "auth/invalid-email":
+            errorMessage = "Invalid email address.";
+            break;
+          case "auth/user-disabled":
+            errorMessage = "Your account has been disabled.";
+            break;
+          case "auth/user-not-found":
+            errorMessage = "User not found.";
+            break;
+          case "auth/wrong-password":
+            errorMessage = "Invalid password.";
+            break;
+          default:
+            errorMessage = "An error occurred during authentication.";
+        }
+  
+        // Display the error message to the user
+        setError(errorMessage);
+
+      });
+ 
   };
 
   return (
@@ -60,7 +93,9 @@ const Login = () => {
                   id="email"
                   placeholder="Email"
                   value={email}
-                  onChange={handleEmailChange}
+                  autoComplete="off"
+                  required
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-6 md:w-full">
@@ -74,9 +109,14 @@ const Login = () => {
                   id="password"
                   placeholder="Password"
                   value={password}
-                  onChange={handlePasswordChange}
+                  autoComplete="off"
+                  required
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
+              {error && (
+                <p className="text-red-600 text-center py-1">{error}</p>
+              )}
               <button
                 className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 w-full rounded-md duration-500 hover:bg-cyan-500 uppercase"
                 onClick={handleLogin}
@@ -86,20 +126,24 @@ const Login = () => {
             </form>
             <div className="flex justify-center">
               <p>Don't have an account?</p>
-              <p className="ml-1">
-                <Link to="/pricing" style={{ textDecoration: "none" }}>
-                  <a className="text-blue-700 text-center text-sm">
-                    Sign up here
-                  </a>
-                </Link>
-              </p>
+              {/* <div className="ml-1"> */}
+              <Link
+                to="/pricing"
+                className="ml-1"
+                style={{ textDecoration: "none" }}
+              >
+                <p className="text-blue-700 text-center text-sm">
+                  Sign up here
+                </p>
+              </Link>
+              {/* </p> */}
             </div>
-            <a
-              className="text-blue-700 text-center text-sm flex justify-center"
-              href="#"
-            >
-              Forgot password?
-            </a>
+            <Link to="/forgetpassword" style={{ textDecoration: "none" }}>
+              
+              <p className="text-blue-700 text-center text-sm flex justify-center">
+                Forgot password?
+              </p>
+            </Link>
           </div>
         </div>
       </div>
