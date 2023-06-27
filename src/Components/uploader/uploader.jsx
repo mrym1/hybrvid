@@ -1,13 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import Downloader from "../downloader/downloader";
-import VideoThumbnail from "./VideoThumbnailComp";
-import { Link } from "react-router-dom";
-import { post_api } from "../../api";
-import { get_api } from "../../api";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
+import { Link } from "react-router-dom";
+import { get_api, post_api } from "../../api";
+import VideoThumbnail from "./VideoThumbnailComp";
 
 const uploader = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -19,7 +16,8 @@ const uploader = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [clipUrls, setClipUrls] = useState([]);
+  var [clipUrls, setClipUrls] = useState([]);
+  var [noOfClips, setNoOfClips] = useState(null);
 
   const handleClick = () => {
     setOpen(true);
@@ -134,12 +132,13 @@ const uploader = () => {
       if (response == null) {
         console.log("error");
       } else {
-        clipUrls.push("");
-        setClipUrls(clipUrls);
+        setNoOfClips(0);
+        clipUrls = [...clipUrls, ""];
+        setClipUrls(clipUrls); 
         let id = setInterval(() => {
           console.log("usama1");
           checkClips();
-        }, 10000);
+        }, 30000);
         intervalId = id;
       }
     }
@@ -147,21 +146,22 @@ const uploader = () => {
 
   const checkClips = async () => {
     try {
+      console.log("current clip ",`clip/${clipUrls.length - 1}`)
       var response = await get_api(`clip/${clipUrls.length - 1}`);
       console.log("api response", response);
 
       if (response == null) {
       } else {
-        clipUrls[clipUrls.length - 1] = response.result.clip_url;
-        // "https://res.cloudinary.com/dusxwrgdb/video/upload/v1665982164/samples/cld-sample-video.mp4";
-        setClipUrls(clipUrls);
-        if (clipUrls.length == 2) {
+        setNoOfClips(response.result.clip_count);
+        clipUrls[clipUrls.length - 1] = response.result.clip_url; 
+        setClipUrls([...clipUrls]);
+        console.log("rrsponsez length:  ", clipUrls);
+        if (clipUrls.length == response.result.clip_count) {
           clearInterval(intervalId);
         } else {
-          clipUrls.push("");
-          setClipUrls((prevClipUrls) => [...prevClipUrls, clipUrls]);
+          clipUrls = [...clipUrls, ""];
+          setClipUrls(clipUrls);
         }
-        // console.log("rrsponsez:  ", clipUrls);
       }
     } catch (error) {
       console.log(error);
@@ -318,7 +318,24 @@ const uploader = () => {
           </p>
         </div>
       </div>
+      {
+        noOfClips!=null &&
+        <div style={{ height: 10, width: 300, display: "flex", backgroundColor: "lightgray" }}>
+            
+            {
+              Array.from({ length: noOfClips }, (item, index) => { 
+                
+                  
+                  return <div style={{flex:1,height: 10,backgroundColor:clipUrls[index]!=null && clipUrls[index]!=""? "blue":"lightgray"}}></div>
+                
+              }
+            )
+            
+            }
 
+
+      </div>
+      }
       {/* {videothumb()} */}
       <div className="flex my-20">
         {clipUrls.map((url, index) => {

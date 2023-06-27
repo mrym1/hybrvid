@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import Nav from "../../Components/navbar/nav";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Nav from "../../Components/navbar/nav";
 import { auth, db } from "../../firebase";
-import { getDoc, doc } from "firebase/firestore";
 
 // import logo from "../../assets/logo.png";
 
@@ -37,7 +36,8 @@ const Login = () => {
         // Store credentials in local storage
         localStorage.setItem("credentials", credentials);
         if (members === false) {
-          navigate("/checkout");
+          navigate("/");
+          // navigate("/checkout");
         } else {
           navigate("/");
         }
