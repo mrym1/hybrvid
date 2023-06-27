@@ -23,7 +23,14 @@ const VideoThumbnailComp = ({ url }) => {
 
   return (
     <div className="flex flex-wrap ">
-      <Card sx={{ minWidth: 295, maxWidth: 295, height: 220, marginLeft: 10 }}>
+      <Card
+        sx={{
+          minWidth: 295,
+          maxWidth: 295,
+          height: 220,
+          marginLeft: 10,
+        }}
+      >
         {url == "" ? (
           <div
             className="flex flex-col justify-center items-center h-600"
@@ -33,17 +40,17 @@ const VideoThumbnailComp = ({ url }) => {
             <p>Preparing clip. Please wait...</p>
           </div>
         ) : (
-          <div style={{ height: 150, overflow: "hidden" }}>
-            <div style={{ height: "100%", overflow: "hidden" }}>
+          <div style={{ height: 220, overflow: "hidden" }}>
+            <div style={{ height: "175px", overflow: "hidden" }}>
               <VideoThumbnail
                 videoUrl={url}
                 thumbnailHandler={(thumbnail) => console.log(thumbnail)}
               />
             </div>
-            <CardActions>
+            <CardActions className="flex justify-start">
               <Button
                 variant="contained"
-                className=""
+                className="mb-3 w-full"
                 size="small"
                 onClick={handleDownload}
               >
