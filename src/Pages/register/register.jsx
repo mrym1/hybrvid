@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../../Components/navbar/nav";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth,db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { Timestamp, addDoc, getDoc, doc, setDoc } from "firebase/firestore";
 
 const register = () => {
@@ -14,6 +14,13 @@ const register = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const credentials = localStorage.getItem("credentials");
+    if (credentials) {
+      navigate("/");
+      return;
+    }
+  }, []);
 
   const handleSignUp = async () => {
     if (!email || !password || !passwordConfirmed) {
@@ -24,52 +31,58 @@ const register = () => {
     }
     setError("");
     setLoading(true);
-    await createUserWithEmailAndPassword(auth, email, password) .then(async (userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        // Signed in
+        const user = userCredential.user;
 
-      const userDocRef = doc(db, "users", user.uid);
-      const userDocSnapshot = await getDoc(userDocRef);
-      const userData = userDocSnapshot.data();
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        const userData = userDocSnapshot.data();
 
-      // Get the `members` value from the user document
-      const members = userData && userData.members ? userData.members : false;
-      const credentials = `${email}:${password}:${members || false}`;
+        // Get the `members` value from the user document
+        const members = userData && userData.members ? userData.members : false;
+        const credentials = `${email}:${password}:${members || false}`;
 
-      // Store credentials in local storage
-      localStorage.setItem("credentials", credentials);
-      await setDoc(doc(db, `users`,user.uid), {
-        member:false,
-        createdAt: Timestamp.fromDate(new Date())
-      }).then((a)=>{
+        // Store credentials in local storage
+        localStorage.setItem("credentials", credentials);
+        await setDoc(doc(db, `users`, user.uid), {
+          member: false,
+          createdAt: Timestamp.fromDate(new Date()),
+        })
+          .then((a) => {
+            setLoading(false);
+            console.log("User Created");
+
+            if (credentials && credentials.includes(":false")) {
+              navigate("/checkout");
+            }
+          })
+          .catch((e) => {
+            setLoading(false);
+            setError("Something went wrong. Please try again");
+          });
+        // ...
+      })
+      .catch((error) => {
         setLoading(false);
-        console.log("User Created");
-        navigate("/checkout");
-      }).catch((e)=>{
-        setLoading(false);
-        setError("Something went wrong. Please try again");
+        var msg = "";
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        if (error.code == "auth/weak-password") {
+          msg = "Please create a strong password";
+        } else if (error.code == "auth/email-already-in-use") {
+          msg = "This email is already registered";
+        } else if (error.code == "auth/invalid-email") {
+          msg = "Please enter a valid email";
+        } else {
+          msg = errorMessage;
+        }
+        console.log(errorCode);
+        console.log(errorMessage);
+        setError(msg);
+        // ..
       });
-      // ...
-    })
-    .catch((error) => {
-      setLoading(false);
-      var msg = '';
-      const errorCode = error.code;
-      const errorMessage = error.message;
-       if(error.code=="auth/weak-password"){
-        msg = "Please create a strong password";
-      }else if(error.code=="auth/email-already-in-use"){
-        msg = "This email is already registered";
-      }else if(error.code=="auth/invalid-email"){
-        msg = "Please enter a valid email";
-      }else{
-         msg = errorMessage;
-       }
-      console.log(errorCode);
-      console.log(errorMessage);
-      setError(msg);
-      // ..
-    });
   };
 
   return (
@@ -131,12 +144,12 @@ const register = () => {
               </button>
               {/* </Link> */}
             </form>
-            <p className="flex justify-center text-sm">
+            <div className="flex justify-center text-sm">
               Already have an account?{" "}
               <Link to="/login" style={{ textDecoration: "none" }}>
-                <a className="text-blue-700 text-center ml-1">Login here</a>
+                <p className="text-blue-700 text-center ml-1">Login here</p>
               </Link>
-            </p>
+            </div>
           </div>
         </div>
       </div>

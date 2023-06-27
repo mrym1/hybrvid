@@ -134,7 +134,7 @@ const uploader = () => {
       } else {
         setNoOfClips(0);
         clipUrls = [...clipUrls, ""];
-        setClipUrls(clipUrls); 
+        setClipUrls(clipUrls);
         let id = setInterval(() => {
           console.log("usama1");
           checkClips();
@@ -146,14 +146,14 @@ const uploader = () => {
 
   const checkClips = async () => {
     try {
-      console.log("current clip ",`clip/${clipUrls.length - 1}`)
+      console.log("current clip ", `clip/${clipUrls.length - 1}`);
       var response = await get_api(`clip/${clipUrls.length - 1}`);
       console.log("api response", response);
 
       if (response == null) {
       } else {
         setNoOfClips(response.result.clip_count);
-        clipUrls[clipUrls.length - 1] = response.result.clip_url; 
+        clipUrls[clipUrls.length - 1] = response.result.clip_url;
         setClipUrls([...clipUrls]);
         console.log("rrsponsez length:  ", clipUrls);
         if (clipUrls.length == response.result.clip_count) {
@@ -167,8 +167,6 @@ const uploader = () => {
       console.log(error);
     }
   };
-
-
 
   return (
     <div>
@@ -318,24 +316,33 @@ const uploader = () => {
           </p>
         </div>
       </div>
-      {
-        noOfClips!=null &&
-        <div style={{ height: 10, width: 300, display: "flex", backgroundColor: "lightgray" }}>
-            
-            {
-              Array.from({ length: noOfClips }, (item, index) => { 
-                
-                  
-                  return <div style={{flex:1,height: 10,backgroundColor:clipUrls[index]!=null && clipUrls[index]!=""? "blue":"lightgray"}}></div>
-                
-              }
-            )
-            
-            }
-
-
-      </div>
-      }
+      {noOfClips != null && (
+        <div className="flex justify-center items-center">
+        <div className="rounded-lg"
+          style={{
+            height: 10,
+            width: 300,
+            display: "flex",
+            backgroundColor: "lightgray",
+          }}
+        >
+          {Array.from({ length: noOfClips }, (item, index) => {
+            return (
+              <div className="rounded-lg"
+                style={{
+                  flex: 1,
+                  height: 10,
+                  backgroundColor:
+                    clipUrls[index] != null && clipUrls[index] != ""
+                      ? "blue"
+                      : "lightgray",
+                }}
+              ></div>
+            );
+          })}
+        </div>
+        </div>
+      )}
       {/* {videothumb()} */}
       <div className="flex my-20">
         {clipUrls.map((url, index) => {
@@ -343,7 +350,6 @@ const uploader = () => {
           return <VideoThumbnail key={index} url={url} />;
         })}
       </div>
-      
     </div>
   );
 };

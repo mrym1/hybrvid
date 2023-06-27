@@ -36,7 +36,7 @@ const nav = () => {
     <nav className="p-3 bg-white shadow md:flex md:items-center md:justify-between">
       <div className="flex justify-between items-center">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="text-3xl font-bold    ml-1">
+          <span className="text-3xl font-bold   ml-1">
             {/* <img 
               className="h-10 inline rounded-md"
               src={logo}
@@ -77,21 +77,6 @@ const nav = () => {
           isMenuOpen ? "block mb-2 mt-8" : "hidden"
         }`}
       >
-        {/* <div className="mt-3 md:mt-0 md:ml-4 md:flex mr-2">
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <p
-              className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 -mx-4 mb-4"
-             
-            >
-              Login
-            </p>
-          </Link>
-          <Link to="/pricing" style={{ textDecoration: "none" }}>
-            <p className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4">
-              Register
-            </p>
-          </Link>
-        </div> */}
         <div className="mt-3 md:mt-0 md:ml-4 md:flex mr-2">
           {!isLoggedIn ? (
             <>
@@ -108,7 +93,7 @@ const nav = () => {
             </>
           ) : (
             <button
-              className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 -mx-4 mb-4"
+              className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4 mr-2"
               onClick={() => {
                 // Perform logout action here
                 // Clear the user credentials from local storage and update isLoggedIn state

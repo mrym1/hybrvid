@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Nav from "../../Components/navbar/nav";
 import { auth, db } from "../../firebase";
@@ -12,6 +12,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const credentials = localStorage.getItem("credentials");
+    if (credentials) {
+      navigate("/");
+      return;
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,21 +35,23 @@ const Login = () => {
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnapshot = await getDoc(userDocRef);
         const userData = userDocSnapshot.data();
+        console.log(userData.member);
 
         // Get the `members` value from the user document
-        const members = userData && userData.members ? userData.members : false;
+        const members = userData.member;
 
 
         const credentials = `${email}:${password}:${members}`;
 
-        // Store credentials in local storage
+        // Store credentials in localstorage
         localStorage.setItem("credentials", credentials);
-        if (members === false) {
-          navigate("/");
-          // navigate("/checkout");
-        } else {
-          navigate("/");
-        }
+        navigate("/")
+        // if (members === false) {
+        //   // navigate("/");
+        //   navigate("/checkout");
+        // } else {
+        //   navigate("/");
+        // }
         console.log(user);
 
       })

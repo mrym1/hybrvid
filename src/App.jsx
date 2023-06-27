@@ -5,6 +5,7 @@ import Pricing from "./Pages/pricing/pricing";
 import Login from "./Pages/login/login";
 import Checkout from "./Pages/checkout/checkout";
 import Forgotpassword from "./Pages/ForgetPassword/Forgetpassword";
+// import ProtectedRoute from "./ProtectedRoute";
 
 import "./App.css";
 
