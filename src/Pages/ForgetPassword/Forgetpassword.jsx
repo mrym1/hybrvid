@@ -28,8 +28,19 @@ const Forgotpassword = () => {
         setMessage("Check your inbox for futher instructions.");
       })
       .catch((error) => {
+        var msg = "";
+        const errorCode = error.code;
         const errorMessage = error.message;
-        setError(errorMessage);
+        if (error.code == "auth/user-not-found") {
+          msg = "User not Found.";
+        } else if (error.code == "auth/invalid-email") {
+          msg = "Please enter a valid email";
+        } else {
+          msg = errorMessage;
+        }
+        console.log(errorCode);
+        console.log(errorMessage);
+        setError(msg);
       });
   };
 
@@ -60,7 +71,7 @@ const Forgotpassword = () => {
                 <p
                   className={`text-${
                     error ? "red" : "green"
-                  }-600 text-center py-2`}
+                  }-600 text-center py-4`}
                 >
                   {error || message}
                 </p>
