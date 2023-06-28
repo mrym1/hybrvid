@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-// import Downloader from "../downloader/downloader";
 import Snackbar from "@mui/material/Snackbar";
 import { Link } from "react-router-dom";
 import { get_api, post_api } from "../../api";
@@ -9,15 +7,15 @@ import VideoThumbnail from "./VideoThumbnailComp";
 const uploader = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const storedFileAddress = localStorage.getItem("selectedFileAddress");
-  const [showUploadComponent, setShowUploadComponent] = useState(
-    !storedFileAddress
-  );
+  // const [showUploadComponent, setShowUploadComponent] = useState(
+  //   !storedFileAddress
+  // );
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   var [clipUrls, setClipUrls] = useState([]);
   var [noOfClips, setNoOfClips] = useState(null);
+  var [loadbar, setLoadbar] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -29,26 +27,26 @@ const uploader = () => {
     }
   }, []);
 
-  ///////////////////////////////////////////
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
 
-    if (file && file.type.includes("video")) {
-      setSelectedFile(URL.createObjectURL(file));
-      localStorage.setItem("selectedFileAddress", URL.createObjectURL(file));
-      setShowUploadComponent(false);
-    } else {
-      setSelectedFile(null);
-      localStorage.removeItem("selectedFileAddress");
-    }
-  };
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
 
-  const handleRemoveUrl = () => {
-    setSelectedFile(null);
-    localStorage.removeItem("selectedFileAddress");
-    setShowUploadComponent(true);
-  };
+  //   if (file && file.type.includes("video")) {
+  //     setSelectedFile(URL.createObjectURL(file));
+  //     localStorage.setItem("selectedFileAddress", URL.createObjectURL(file));
+  //     setShowUploadComponent(false);
+  //   } else {
+  //     setSelectedFile(null);
+  //     localStorage.removeItem("selectedFileAddress");
+  //   }
+  // };
+
+  // const handleRemoveUrl = () => {
+  //   setSelectedFile(null);
+  //   localStorage.removeItem("selectedFileAddress");
+  //   setShowUploadComponent(true);
+  // };
 
   const [url, setUrl] = useState(localStorage.getItem("url") || "");
   const [errorMessage, setErrorMessage] = useState("");
@@ -87,7 +85,7 @@ const uploader = () => {
     navigator.clipboard
       .readText()
       .then((text) => {
-        // Check if the pasted text is a valid YouTube URL
+        // Check if YouTube URL is a valid YouTube URL
         const youtubeRegex =
           /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
 
@@ -115,7 +113,7 @@ const uploader = () => {
   const handleCreateLogin = async (e) => {
     const isLoggedIn = localStorage.getItem("credentials");
     if (!isLoggedIn) {
-      // User is not logged in, show login required banner and return
+      // User is not login
       setShowLoginBanner(true);
       setIsLoggedIn(false);
       return;
@@ -133,6 +131,7 @@ const uploader = () => {
         console.log("error");
       } else {
         setNoOfClips(0);
+        setLoadbar(true);
         clipUrls = [...clipUrls, ""];
         setClipUrls(clipUrls);
         let id = setInterval(() => {
@@ -187,8 +186,8 @@ const uploader = () => {
           </p>
         </div>
       )}
-      <div className="flex flex-col items-center justify-center pt-4 m-10 h-70 border-2 border-black-400 border-dashed rounded-lg md:w-1/3 mx-auto max-sm:mx-6">
-        <div>
+      <div>
+        {/* <div>
           {showUploadComponent ? (
             <div className="flex flex-col items-center justify-center">
               <label
@@ -228,8 +227,8 @@ const uploader = () => {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center mt-4">
-              {/* <p>URL: {url}</p> */}
-              <button
+              // {/* <p>URL: {url}</p> */}
+        {/* <button
                 type="button"
                 className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md duration-500 hover:bg-cyan-500"
                 // onClick={handleCreateLogin}
@@ -244,107 +243,109 @@ const uploader = () => {
               </p>
             </div>
           )}
-        </div>
+        </div>  */}
 
-        <p className="text-xs my-4 text-gray-500 dark:text-gray-400">Or</p>
+        {/* <p className="text-xs my-4 text-gray-500 dark:text-gray-400">Or</p> */}
 
-        <div>
-          {isLoading ? (
-            // <div className="flex items-center justify-center w-56 h-56 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-            <div className="px-5 py-3 my-3 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
-              Loading...
-            </div>
-          ) : (
-            // </div>
+        <div className="flex flex-col items-center justify-center pt-4 pb-4 m-10 h-70 border-2 border-black-400 border-dashed rounded-lg md:w-1/3 mx-auto max-sm:mx-6">
+          {loadbar ? (
             <div>
-              {url ? (
-                <div className="flex flex-col items-center justify-center">
-                  {/* <p>URL: {url}</p> */}
-                  <div>
-                    <button
-                      type="button"
-                      className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md  duration-500 hover:bg-cyan-500"
-                      onClick={handleCreateLogin}
-                    >
-                      Create Clips
-                    </button>
-                    <p
-                      className="text-blue-500 cursor-pointer underline py-3"
-                      onClick={handleClearUrl}
-                    >
-                      Change YouTube URL
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center mb-4 border border-black-300 p-3 rounded">
-                  <div className="relative w-full">
-                    <input
-                      type="text"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                      placeholder="Paste YouTube URL"
-                      value={url}
-                      onChange={handleInputChange} // Update this line
-                      autoComplete="off"
-                      required
-                      ref={inputRef}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-red-400 rounded-lg hover:bg-blue-400"
-                    onClick={handlePaste}
+              {noOfClips != null && (
+                <div className="flex justify-center items-center">
+                  <div
+                    className="rounded-lg"
+                    style={{
+                      height: 10,
+                      width: 300,
+                      display: "flex",
+                      borderRadius: 10,
+                      backgroundColor: "lightgray",
+                    }}
                   >
-                    Paste
-                  </button>
+                    {Array.from({ length: noOfClips }, (item, index) => {
+                      return (
+                        <div
+                          className="rounded-lg"
+                          style={{
+                            flex: 1,
+                            height: 10,
+                            borderRadius: 10,
+                            backgroundColor:
+                              clipUrls[index] != null && clipUrls[index] != ""
+                                ? "blue"
+                                : "lightgray",
+                          }}
+                        ></div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
+              {message && <p className="text-sm text-center py-3">{message}</p>}
+            </div>
+          ) : (
+            <div>
+              {isLoading ? (
+                <div className="px-5 py-3 my-3 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
+                  Loading...
+                </div>
+              ) : (
+                <div>
+                  {url ? (
+                    <div className="flex flex-col items-center justify-center">
+                      <div>
+                        <button
+                          type="button"
+                          className="bg-gradient-to-r from-blue-400 to-blue-500 text-white text-lg px-6 py-3 rounded-md  duration-500 hover:bg-cyan-500 mt-4"
+                          onClick={handleCreateLogin}
+                        >
+                          Create Clips
+                        </button>
+                        <p
+                          className="text-blue-500 cursor-pointer underline py-3"
+                          onClick={handleClearUrl}
+                        >
+                          Change YouTube URL
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center mb-4 border border-black-300 p-3 rounded">
+                      <div className="relative w-full ">
+                        <input
+                          type="text"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                          placeholder="Paste YouTube URL"
+                          value={url}
+                          onChange={handleInputChange} // Update this line
+                          autoComplete="off"
+                          required
+                          ref={inputRef}
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        className="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-red-400 rounded-lg hover:bg-blue-400"
+                        onClick={handlePaste}
+                      >
+                        Paste
+                      </button>
+                    </div>
+                  )}
 
-              {errorMessage && (
-                <p className="text-red-500 text-xs text-center py-3">
-                  {errorMessage}
-                </p>
+                  {errorMessage && (
+                    <p className="text-red-500 text-xs text-center py-3">
+                      {errorMessage}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           )}
         </div>
-        {/* {clipUrl && <p>URL: {clipUrl}</p>} */}
-
-        <div>
-          <p className="text-xs mb-4 pb-4 text-gray-500 dark:text-gray-400">
-            Max file size 1GB. Sign Up for more
-          </p>
-        </div>
       </div>
-      {noOfClips != null && (
-        <div className="flex justify-center items-center">
-        <div className="rounded-lg"
-          style={{
-            height: 10,
-            width: 300,
-            display: "flex",
-            backgroundColor: "lightgray",
-          }}
-        >
-          {Array.from({ length: noOfClips }, (item, index) => {
-            return (
-              <div className="rounded-lg"
-                style={{
-                  flex: 1,
-                  height: 10,
-                  backgroundColor:
-                    clipUrls[index] != null && clipUrls[index] != ""
-                      ? "blue"
-                      : "lightgray",
-                }}
-              ></div>
-            );
-          })}
-        </div>
-        </div>
-      )}
-      {/* {videothumb()} */}
-      <div className="flex my-20">
+ 
+      <div className="grid grid-cols-1 gap-8  md:grid-cols-3 my-20">
         {clipUrls.map((url, index) => {
           console.log("video Url asd", url);
           return <VideoThumbnail key={index} url={url} />;

@@ -33,18 +33,16 @@ const register = () => {
     setLoading(true);
     await createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
-        // Signed in
         const user = userCredential.user;
 
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnapshot = await getDoc(userDocRef);
         const userData = userDocSnapshot.data();
 
-        // Get the `members` value from the user document
+        // members value
         const members = userData && userData.members ? userData.members : false;
         const credentials = `${email}:${password}:${members || false}`;
 
-        // Store credentials in local storage
         localStorage.setItem("credentials", credentials);
         await setDoc(doc(db, `users`, user.uid), {
           member: false,
@@ -134,7 +132,6 @@ const register = () => {
               {error && (
                 <p className="text-red-600 text-center py-1">{error}</p>
               )}
-              {/* <Link to="/checkout" style={{ textDecoration: "none" }}> */}
               <button
                 onClick={handleSignUp}
                 disabled={loading}
@@ -142,7 +139,6 @@ const register = () => {
               >
                 SignUp
               </button>
-              {/* </Link> */}
             </form>
             <div className="flex justify-center text-sm">
               Already have an account?{" "}

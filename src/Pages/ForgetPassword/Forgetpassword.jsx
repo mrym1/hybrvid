@@ -1,25 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../../Components/navbar/nav";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../firebase";
-// import logo from "../../assets/logo.png";
 
 const Forgotpassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async () => {
-    setError("");
-    try {
-      setMessage("");
-      await sendPasswordResetEmail(auth, email);
-      setMessage("Check your inbox for futher instructions.");
-    } catch (err) {
-      setError(err.message);
+  useEffect(() => {
+    const credentials = localStorage.getItem("credentials");
+    if (credentials) {
+      navigate("/");
+      return;
     }
-  };
+  }, []);
+
+  const handleSubmit = () => {
+    console.log("Reset Password");
+
+  }
+
+  // const handleSubmit = async () => {
+  //   setError("");
+  //   setMessage("");
+  //   await sendPasswordResetEmail(auth, email)
+  //     .then(() => {
+  //       // Password reset email sent!
+  //       setMessage("Check your inbox for futher instructions.");
+  //     })
+  //     .catch((error) => {
+  //       const errorMessage = error.message;
+  //       setError(errorMessage);
+  //     });
+  // };
 
   return (
     <div>
@@ -28,23 +44,10 @@ const Forgotpassword = () => {
         <div className="flex items-center h-screen w-full">
           <div className="w-full bg-white rounded shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">
             <div className="flex justify-center items-center">
-              <span className="text-3xl mb-4 font-bold">
-                {/* <img
-                  className="h-12 mb-3 inline rounded-md"
-                  src={logo}
-                  alt="Logo"
-                /> */}
-                HybrVid
-              </span>
+              <span className="text-3xl mb-4 font-bold">HybrVid</span>
             </div>
-            {/* <span className="flex w-full text-lg uppercase font-bold mb-4 justify-center">
-              Login
-            </span> */}
             <form className="mb-4" action="/" method="post">
               <div className="mb-4 md:w-full">
-                {/* <label htmlFor="email" className="block text-xs mb-1">
-                  Email
-                </label> */}
                 <input
                   className="w-full border rounded p-2 outline-none focus:shadow-outline"
                   type="email"
@@ -57,12 +60,6 @@ const Forgotpassword = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              {/* {error && (
-                <p className="text-red-600 text-center py-2">{error}</p>
-              )}
-              {message && (
-                <p className="text-green-600 text-center py-2">{message}</p>
-              )} */}
               {error || message ? (
                 <p
                   className={`text-${
@@ -82,13 +79,13 @@ const Forgotpassword = () => {
             </form>
             <div className="flex justify-center">
               <p>Don't have an account?</p>
-              <p className="ml-1">
-                <Link to="/pricing" style={{ textDecoration: "none" }}>
-                  <a className="text-blue-700 text-center text-sm">
+              <div className="ml-1">
+                <Link to="/register" style={{ textDecoration: "none" }}>
+                  <p className="text-blue-700 text-center text-sm">
                     Sign up here
-                  </a>
+                  </p>
                 </Link>
-              </p>
+              </div>
             </div>
           </div>
         </div>

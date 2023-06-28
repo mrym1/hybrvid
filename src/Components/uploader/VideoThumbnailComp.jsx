@@ -27,7 +27,8 @@ const VideoThumbnailComp = ({ url }) => {
         sx={{
           minWidth: 295,
           maxWidth: 295,
-          height: 220,
+          minheight: 220,
+          maxHeight: 350,
           marginLeft: 10,
         }}
       >
@@ -40,8 +41,8 @@ const VideoThumbnailComp = ({ url }) => {
             <p>Preparing clip. Please wait...</p>
           </div>
         ) : (
-          <div style={{ height: 220, overflow: "hidden" }}>
-            <div style={{ height: "175px", overflow: "hidden" }}>
+          <div style={{ height: 340, overflow: "hidden" }}>
+            <div style={{ height: 290, overflow: "hidden" }}>
               <VideoThumbnail
                 videoUrl={url}
                 thumbnailHandler={(thumbnail) => console.log(thumbnail)}

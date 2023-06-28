@@ -22,21 +22,21 @@ const nav = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleLogOut = async () => {
-    try {
-      var result = await signOut(auth);
-      console.log(result);
-      navigate("/");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+  // const handleLogOut = async () => {
+  //   try {
+  //     var result = await signOut(auth);
+  //     console.log(result);
+  //     navigate("/");
+  //   } catch (err) {
+  //     setError(err.message);
+  //   }
+  // };
 
   return (
-    <nav className="p-3 bg-white shadow md:flex md:items-center md:justify-between">
+    <nav className="px-3 bg-white shadow md:flex md:items-center md:justify-between">
       <div className="flex justify-between items-center">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="text-3xl font-bold   ml-1">
+          <span className="text-3xl font-bold ml-12">
             {/* <img 
               className="h-10 inline rounded-md"
               src={logo}
@@ -48,7 +48,7 @@ const nav = () => {
         <div className="md:hidden">
           <button
             onClick={toggleMenu}
-            className="block text-gray-500 hover:text-black focus:text-black focus:outline-none"
+            className="block my-4 mr-12 text-gray-500 hover:text-black focus:text-black focus:outline-none"
           >
             <svg
               className="h-6 w-6 fill-current"
@@ -74,10 +74,10 @@ const nav = () => {
       </div>
       <div
         className={`md:inline-flex ${
-          isMenuOpen ? "block mb-2 mt-8" : "hidden"
+          isMenuOpen ? "block mt-8 pb-2" : "hidden mt-3"
         }`}
       >
-        <div className="mt-3 md:mt-0 md:ml-4 md:flex mr-2">
+        <div className="mr-12 md:mt-0 md:ml-4 md:flex text-center">
           {!isLoggedIn ? (
             <>
               <Link to="/login" style={{ textDecoration: "none" }}>
@@ -86,7 +86,7 @@ const nav = () => {
                 </p>
               </Link>
               <Link to="/register" style={{ textDecoration: "none" }}>
-                <p className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4">
+                <p className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4 -mx-4">
                   Register
                 </p>
               </Link>

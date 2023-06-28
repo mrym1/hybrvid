@@ -5,14 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import Nav from "../../Components/navbar/nav";
 import { auth, db } from "../../firebase";
 
-// import logo from "../../assets/logo.png";
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const credentials = localStorage.getItem("credentials");
@@ -26,8 +23,6 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    // Perform login action
-
     await signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
@@ -37,23 +32,12 @@ const Login = () => {
         const userData = userDocSnapshot.data();
         console.log(userData.member);
 
-        // Get the `members` value from the user document
         const members = userData.member;
-
-
         const credentials = `${email}:${password}:${members}`;
-
-        // Store credentials in localstorage
         localStorage.setItem("credentials", credentials);
-        navigate("/")
-        // if (members === false) {
-        //   // navigate("/");
-        //   navigate("/checkout");
-        // } else {
-        //   navigate("/");
-        // }
-        console.log(user);
+        navigate("/");
 
+        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -75,8 +59,6 @@ const Login = () => {
           default:
             errorMessage = "An error occurred during authentication.";
         }
-
-        // Display the error message to the user
         setError(errorMessage);
       });
   };
@@ -88,18 +70,10 @@ const Login = () => {
         <div className="flex items-center h-screen w-full">
           <div className="w-full bg-white rounded shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">
             <div className="flex justify-center items-center">
-              <span className="text-3xl mb-4 font-bold">
-                {/* <img
-                  className="h-12 mb-3 inline rounded-md"
-                  src={logo}
-                  alt="Logo"
-                /> */}
-                HybrVid
-              </span>
+              <span className="text-3xl mb-4 font-bold">HybrVid</span>
             </div>
             <form className="mb-4" action="/" method="post">
               <div className="mb-4 md:w-full">
-
                 <input
                   className="w-full border rounded p-2 outline-none focus:shadow-outline"
                   type="email"
