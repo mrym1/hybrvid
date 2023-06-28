@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Nav from "../../Components/navbar/nav";
 import { auth, db } from "../../firebase";
@@ -30,17 +30,23 @@ const Login = () => {
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnapshot = await getDoc(userDocRef);
         const userData = userDocSnapshot.data();
-        console.log(userData.member);
-
-        const members = userData.member;
-        const credentials = `${email}:${password}:${members}`;
-        localStorage.setItem("credentials", credentials);
-        navigate("/");
-
-        console.log(user);
+        if (userData != null) {
+          console.log(userData.member);
+  
+          const members = userData.member;
+          const credentials = `${email}:${password}:${members}`;
+          localStorage.setItem("credentials", credentials);
+          navigate("/");
+  
+          console.log(user);
+          
+        } else {
+          setError('Please create new account');
+        }
       })
       .catch((error) => {
         const errorCode = error.code;
+       
         let errorMessage;
 
         switch (errorCode) {

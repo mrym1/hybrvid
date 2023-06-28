@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import Nav from "../../Components/navbar/nav";
-import { Link, useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail } from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Nav from "../../Components/navbar/nav";
 import { auth } from "../../firebase";
 
 const Forgotpassword = () => {
@@ -18,24 +18,20 @@ const Forgotpassword = () => {
     }
   }, []);
 
-  const handleSubmit = () => {
-    console.log("Reset Password");
-
-  }
-
-  // const handleSubmit = async () => {
-  //   setError("");
-  //   setMessage("");
-  //   await sendPasswordResetEmail(auth, email)
-  //     .then(() => {
-  //       // Password reset email sent!
-  //       setMessage("Check your inbox for futher instructions.");
-  //     })
-  //     .catch((error) => {
-  //       const errorMessage = error.message;
-  //       setError(errorMessage);
-  //     });
-  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+    await sendPasswordResetEmail(auth, email)
+      .then(() => {
+        // Password reset email sent!
+        setMessage("Check your inbox for futher instructions.");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        setError(errorMessage);
+      });
+  };
 
   return (
     <div>
@@ -46,7 +42,7 @@ const Forgotpassword = () => {
             <div className="flex justify-center items-center">
               <span className="text-3xl mb-4 font-bold">HybrVid</span>
             </div>
-            <form className="mb-4" action="/" method="post">
+            {/* <form className="mb-4" method="post"> */}
               <div className="mb-4 md:w-full">
                 <input
                   className="w-full border rounded p-2 outline-none focus:shadow-outline"
@@ -72,11 +68,11 @@ const Forgotpassword = () => {
 
               <button
                 className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 w-full rounded-md duration-500 hover:bg-cyan-500 uppercase"
-                onClick={handleSubmit}
+                onClick={(e) => handleSubmit(e)}
               >
                 Reset Password
               </button>
-            </form>
+            {/* </form> */}
             <div className="flex justify-center">
               <p>Don't have an account?</p>
               <div className="ml-1">
