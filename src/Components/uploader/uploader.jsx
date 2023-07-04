@@ -111,6 +111,7 @@ const uploader = () => {
   var intervalId = 0;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginBanner, setShowLoginBanner] = useState(false);
+  const [responseSend, setResponseSend] = useState(false);
 
   const handleCreateLogin = async (e) => {
     const isLoggedIn = localStorage.getItem("credentials");
@@ -120,6 +121,7 @@ const uploader = () => {
       setIsLoggedIn(false);
       return;
     } else {
+      setResponseSend(true);
       setIsLoading(true);
       var response = await post_api("clip", {
         URL: `${url}`,
@@ -250,6 +252,11 @@ const uploader = () => {
         {/* <p className="text-xs my-4 text-gray-500 dark:text-gray-400">Or</p> */}
 
         <div className="flex flex-col items-center justify-center pt-4 pb-4 m-10 h-70 border-2 border-black-400 border-dashed rounded-lg md:w-1/3 mx-auto max-sm:mx-6">
+          {!message && responseSend && (
+            <p className="text-sm text-center py-3">
+              Fetching the video, please wait ...
+            </p>
+          )}
           {loadbar ? (
             <div>
               {noOfClips != null && (
