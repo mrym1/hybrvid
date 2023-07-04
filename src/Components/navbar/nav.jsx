@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { signOut } from "firebase/auth";
-// import logo from '../../assets/logo.png';
+import { FaUserAlt } from "react-icons/fa";
+import Button from '@mui/material/Button';
 
-const nav = () => {
+const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdown, setIsDropwdown] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -16,34 +18,33 @@ const nav = () => {
     }
   }, []);
 
-  // const navigate = useNavigate();
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // const handleLogOut = async () => {
-  //   try {
-  //     var result = await signOut(auth);
-  //     console.log(result);
-  //     navigate("/");
-  //   } catch (err) {
-  //     setError(err.message);
-  //   }
-  // };
+  const toggleMenuDropDown = () => {
+    setIsDropwdown(!isDropdown);
+  };
+
+  const handleLogOut = async () => {
+    try {
+      // Perform logout action here
+      // Clear the user credentials from local storage and update isLoggedIn state
+      localStorage.removeItem("credentials");
+      setIsLoggedIn(false);
+      // You can also use the following line if you're using react-router-dom to navigate to the home page after logout
+      // const navigate = useNavigate();
+      // navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
-    <nav className="px-3 bg-white shadow md:flex md:items-center md:justify-between">
+    <nav className="relative px-3 bg-white shadow md:flex md:items-center md:justify-between">
       <div className="flex justify-between items-center">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="text-3xl font-bold ml-12">
-            {/* <img 
-              className="h-10 inline rounded-md"
-              src={logo}
-              alt="Logo"
-            /> */}
-            HybrVid
-          </span>
+          <span className="text-3xl font-bold ml-12">HybrVid</span>
         </Link>
         <div className="md:hidden">
           <button
@@ -77,7 +78,7 @@ const nav = () => {
           isMenuOpen ? "block mt-8 pb-2" : "hidden mt-3"
         }`}
       >
-        <div className="mr-12 md:mt-0 md:ml-4 md:flex text-center">
+        <div className="relative mr-12 md:mt-0 md:ml-4 md:flex text-center">
           {!isLoggedIn ? (
             <>
               <Link to="/login" style={{ textDecoration: "none" }}>
@@ -92,14 +93,43 @@ const nav = () => {
               </Link>
             </>
           ) : (
+            <div className="relative">
+              <button
+                onClick={toggleMenuDropDown}
+                className="bg-gradient-to-r text-white  py-2 rounded-md  duration-500  mb-4 -mr-2 flex items-center"
+              >
+                <FaUserAlt className="w-5 h-5 mr-2 text-black" />
+              </button>
+              {isDropdown && (
+                <div className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                  <ul
+                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="dropdownHoverButton"
+                  >
+                    <li>
+                      <p
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        John
+                      </p>
+                    </li>
+                    <li>
+                      <a
+                        href="https://billing.stripe.com/p/login/cN217Q54fglmgPmdQQ"
+                        className="block py-2 "
+                      >
+                        <Button variant="outlined" size="small">Manage Account</Button>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+          {isLoggedIn && (
             <button
               className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 mb-4 mr-2"
-              onClick={() => {
-                // Perform logout action here
-                // Clear the user credentials from local storage and update isLoggedIn state
-                localStorage.removeItem("credentials");
-                setIsLoggedIn(false);
-              }}
+              onClick={handleLogOut}
             >
               Logout
             </button>
@@ -110,4 +140,4 @@ const nav = () => {
   );
 };
 
-export default nav;
+export default Nav;
