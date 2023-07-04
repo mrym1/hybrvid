@@ -22,20 +22,20 @@ const VideoThumbnailComp = ({ url }) => {
   };
 
   return (
-    <div className="flex flex-wrap ">
+    <div className="flex flex-wrap justify-center items-center">
       <Card
         sx={{
           minWidth: 295,
           maxWidth: 295,
-          minheight: 220,
-          maxHeight: 350,
-          marginLeft: 10,
+          minheight: 340,
+          maxHeight: 340,
+          // marginLeft: 10,
         }}
       >
         {url == "" ? (
           <div
             className="flex flex-col justify-center items-center h-600"
-            style={{ height: 200 }}
+            style={{ height: 340 }}
           >
             <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
             <p>Preparing clip. Please wait...</p>

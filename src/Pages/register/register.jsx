@@ -11,6 +11,7 @@ const register = () => {
   const [passwordConfirmed, setPasswordConfirmed] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,6 +24,7 @@ const register = () => {
   }, []);
 
   const handleSignUp = async () => {
+    setLoading(true);
     if (!email || !password || !passwordConfirmed) {
       setError("Fill all fields");
     }
@@ -34,6 +36,7 @@ const register = () => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
+        setSubmitted(true);
 
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnapshot = await getDoc(userDocRef);
@@ -135,9 +138,9 @@ const register = () => {
               <button
                 onClick={handleSignUp}
                 disabled={loading}
-                className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 w-full rounded-md duration-500 hover:bg-cyan-500 uppercase"
-              >
-                SignUp
+                className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 w-full rounded-md duration-500 hover:bg-cyan-500"
+                >
+                  {loading ? 'Loading...' : 'SIGNUP'}
               </button>
             </form>
             <div className="flex justify-center text-sm">

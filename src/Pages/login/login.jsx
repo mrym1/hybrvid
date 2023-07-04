@@ -11,6 +11,9 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   useEffect(() => {
     const credentials = localStorage.getItem("credentials");
     if (credentials) {
@@ -21,11 +24,13 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError("");
 
     await signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
+        setSubmitted(true);
 
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnapshot = await getDoc(userDocRef);
@@ -65,8 +70,9 @@ const Login = () => {
           default:
             errorMessage = "An error occurred during authentication.";
         }
+        setLoading(false);
         setError(errorMessage);
-      });
+      })
   };
 
   return (
@@ -109,16 +115,17 @@ const Login = () => {
                 <p className="text-red-600 text-center py-1">{error}</p>
               )}
               <button
-                className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 w-full rounded-md duration-500 hover:bg-cyan-500 uppercase"
-                onClick={handleLogin}
+                className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 w-full rounded-md duration-500 hover:bg-cyan-500"
+                onClick={handleLogin} disabled={loading}
               >
-                Login
+                {loading ? 'Loading...' : 'LOGIN'}
+                
               </button>
             </form>
             <div className="flex justify-center">
               <p>Don't have an account?</p>
               <Link
-                to="/pricing"
+                to="/register"
                 className="ml-1"
                 style={{ textDecoration: "none" }}
               >

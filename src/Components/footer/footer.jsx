@@ -9,7 +9,7 @@ const footer = () => {
           <div className="mx-auto w-full max-w-screen-xl">
             <div className="grid grid-cols-1 gap-8 px-4 py-6  md:grid-cols-3">
               <div>
-                <h1 className="flex flex-col items-center justify-center text-2xl font-semibold text-gray-900 uppercase dark:text-white">
+                <h1 className="flex flex-col items-center justify-center text-2xl font-semibold text-black uppercase ">
                   Contact Us:
                 </h1>
               </div>

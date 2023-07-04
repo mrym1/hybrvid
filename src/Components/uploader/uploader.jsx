@@ -17,6 +17,10 @@ const uploader = () => {
   var [noOfClips, setNoOfClips] = useState(null);
   var [loadbar, setLoadbar] = useState(false);
 
+  const borderRadiusClass = noOfClips === 1 ? "rounded-full" : "";
+  const firstClipClass = noOfClips > 1 ? "rounded-l-lg" : "";
+  const lastClipClass = noOfClips > 1 ? "rounded-r-lg" : "";
+
   const handleClick = () => {
     setOpen(true);
   };
@@ -26,8 +30,6 @@ const uploader = () => {
       setSelectedFile(storedFileAddress);
     }
   }, []);
-
-
 
   // const handleFileChange = (event) => {
   //   const file = event.target.files[0];
@@ -265,11 +267,13 @@ const uploader = () => {
                     {Array.from({ length: noOfClips }, (item, index) => {
                       return (
                         <div
-                          className="rounded-lg"
+                          className={`bg-white mb-2 p-2 ${
+                            index === 0 ? firstClipClass : ""
+                          } ${index === noOfClips - 1 ? lastClipClass : ""}`}
                           style={{
                             flex: 1,
                             height: 10,
-                            borderRadius: 10,
+                            // borderRadius: 10,
                             backgroundColor:
                               clipUrls[index] != null && clipUrls[index] != ""
                                 ? "blue"
@@ -344,13 +348,15 @@ const uploader = () => {
           )}
         </div>
       </div>
- 
-      <div className="grid grid-cols-1 gap-8  md:grid-cols-3 my-20">
+
+      {/* <div className="flex justify-center items-center my-20 "> */}
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3 my-20 md:justify-center">
         {clipUrls.map((url, index) => {
-          console.log("video Url asd", url);
+          console.log("video Url", url);
           return <VideoThumbnail key={index} url={url} />;
         })}
       </div>
+      {/* </div> */}
     </div>
   );
 };
