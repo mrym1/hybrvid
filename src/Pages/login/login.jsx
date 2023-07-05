@@ -2,7 +2,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Nav from "../../Components/navbar/nav";
 import { auth, db } from "../../firebase";
 
 const Login = () => {
@@ -37,21 +36,26 @@ const Login = () => {
         const userData = userDocSnapshot.data();
         if (userData != null) {
           console.log(userData.member);
-  
+
           const members = userData.member;
           const credentials = `${email}:${password}:${members}`;
           localStorage.setItem("credentials", credentials);
-          navigate("/");
-  
+
+          if (members === false) {
+            navigate("/checkout");
+          } else {
+            navigate("/");
+          }
+
           console.log(user);
-          
         } else {
-          setError('Please create new account');
+          setError("Please create a new account");
         }
       })
+
       .catch((error) => {
         const errorCode = error.code;
-       
+
         let errorMessage;
 
         switch (errorCode) {
@@ -72,12 +76,11 @@ const Login = () => {
         }
         setLoading(false);
         setError(errorMessage);
-      })
+      });
   };
 
   return (
     <div>
-      <Nav />
       <div className="bg-gray-200 text-gray-900">
         <div className="flex items-center h-screen w-full">
           <div className="w-full bg-white rounded shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">
@@ -116,10 +119,10 @@ const Login = () => {
               )}
               <button
                 className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 w-full rounded-md duration-500 hover:bg-cyan-500"
-                onClick={handleLogin} disabled={loading}
+                onClick={handleLogin}
+                disabled={loading}
               >
-                {loading ? 'Loading...' : 'LOGIN'}
-                
+                {loading ? "Loading..." : "LOGIN"}
               </button>
             </form>
             <div className="flex justify-center">

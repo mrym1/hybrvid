@@ -1,14 +1,30 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { FaUserAlt } from "react-icons/fa";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { Box, Typography } from "@mui/material";
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdown, setIsDropwdown] = useState(false);
+  // const [isDropdown, setIsDropwdown] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  
+  // Drope down Menu
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     // Check if user credentials exist in local storage
@@ -22,19 +38,12 @@ const Nav = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const toggleMenuDropDown = () => {
-    setIsDropwdown(!isDropdown);
-  };
 
   const handleLogOut = async () => {
     try {
-      // Perform logout action here
-      // Clear the user credentials from local storage and update isLoggedIn state
+
       localStorage.removeItem("credentials");
       setIsLoggedIn(false);
-      // You can also use the following line if you're using react-router-dom to navigate to the home page after logout
-      // const navigate = useNavigate();
-      // navigate("/");
     } catch (err) {
       console.error(err);
     }
@@ -93,37 +102,38 @@ const Nav = () => {
               </Link>
             </>
           ) : (
-            <div className="relative">
-              <button
-                onClick={toggleMenuDropDown}
-                className="bg-gradient-to-r text-white  py-2 rounded-md  duration-500  mb-4 -mr-2 flex items-center"
+            <div className="relative -mr-6 mb-3">
+              <Button
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
               >
                 <FaUserAlt className="w-5 h-5 mr-2 text-black" />
-              </button>
-              {isDropdown && (
-                <div className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                  <ul
-                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdownHoverButton"
-                  >
-                    <li>
-                      <p
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        John
-                      </p>
-                    </li>
-                    <li>
-                      <a
-                        href="https://billing.stripe.com/p/login/cN217Q54fglmgPmdQQ"
-                        className="block py-2 "
-                      >
-                        <Button variant="outlined" size="small">Manage Account</Button>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              )}
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={handleClose}>
+                  <Typography className="block px-8 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    UserName
+                  </Typography>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link to="https://billing.stripe.com/p/login/cN217Q54fglmgPmdQQ">
+                    <Button variant="outlined" size="small">
+                      Manage Account
+                    </Button>
+                  </Link>
+                </MenuItem>
+              </Menu>
             </div>
           )}
           {isLoggedIn && (
