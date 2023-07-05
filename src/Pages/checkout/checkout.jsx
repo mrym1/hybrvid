@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 // import Payment from "../../Components/payment/payment";
-import Nav from "../../Components/navbar/nav";
+import { doc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { db, auth } from "../../firebase";
-import { updateDoc, doc } from "firebase/firestore";
+import Nav from "../../Components/navbar/nav";
+import { auth, db } from "../../firebase";
 
-// import { Elements } from "@stripe/react-stripe-js";
-// import { loadStripe } from "@stripe/stripe-js";
-// import PaymentForm from './PaymentForm';
 
-// const stripePromise = loadStripe("pk_test_51L9OUFHYMywy7UqrbREXzmBj470OQskl4oqvdbc4YLsrU5L96GVEOMTKTP2zAl8P5QC8OF2j9mnLv5SsGJPEQgRa00Py746Mtn");
+import StripeCheckout from 'react-stripe-checkout';
 
 const checkout = () => {
   const navigate = useNavigate();
@@ -25,6 +22,10 @@ const checkout = () => {
       return;
     } 
   }, []);
+  const onToken = (token) => {
+    console.log(token);
+    handleMembership();
+  }
 
   const handleMembership = async () => {
     const user = auth.currentUser;
@@ -45,22 +46,29 @@ const checkout = () => {
     <div>
       <Nav />
       <div className="bg-white rounded-lg shadow w-full p-8 mt-8 md:max-w-lg  md:mx-auto">
-        <button
-          onClick={handleMembership}
-          className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-8 duration-500 hover:bg-cyan-500 -mx-4 mb-4"
+        <StripeCheckout 
+          token={onToken}
+          amount={500} // cents
+          currency="USD"
+          panelLabel="Pay"
+          stripeKey="pk_test_51NJilNAlGtuopEGMD2et1GeSWKihwGfz2mW5dosUylgha42LuontMaZhdtj1D0z5FJvTUyA2CO3h6ch74yQy4n6J003bf7dPIL"
         >
-          Checkout
+        <button
+          className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-md ml-1 duration-500 hover:bg-cyan-500 -mx-4 mb-4"
+        >
+          Pay Now
         </button>
+      </StripeCheckout>
         <h2 className="text-xl font-bold mb-4">Order Review</h2>
         <table className="w-full">
           <tbody>
             <tr>
               <td className="text-gray-500">Product:</td>
-              <td className="text-right">Pro (7GB) Plan</td>
+              <td className="text-right">HyberVid Subscription</td>
             </tr>
             <tr>
               <td className="text-gray-500">Price:</td>
-              <td className="text-right">$49.99</td>
+              <td className="text-right">$5</td>
             </tr>
           </tbody>
         </table>
@@ -68,10 +76,7 @@ const checkout = () => {
           <span className="text-blue-700 cursor-pointer">Change</span>
         </div>
       </div>
-      {/* </div> */}
-      {/* <Elements stripe={stripePromise}>
-        <Payment />
-      </Elements> */}
+      
     </div>
   );
 };
