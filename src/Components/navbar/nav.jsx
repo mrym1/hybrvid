@@ -11,10 +11,9 @@ import { Box, Typography } from "@mui/material";
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isDropdown, setIsDropwdown] = useState(false);
+  const [email, setEmail] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  
   // Drope down Menu
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -26,22 +25,34 @@ const Nav = () => {
     setAnchorEl(null);
   };
 
+  // useEffect(() => {
+  //   // Check if user credentials exist in local storage
+  //   const credentials = localStorage.getItem("credentials");
+  //   if (credentials) {
+  //     setIsLoggedIn(true);
+  //   }
+  // }, []);
   useEffect(() => {
     // Check if user credentials exist in local storage
     const credentials = localStorage.getItem("credentials");
     if (credentials) {
+      // Split the credentials string into its individual parts
+      const [email, password, members] = credentials.split(":");
+      // Use the email value as needed
+      console.log(email);
+      setEmail(email);
       setIsLoggedIn(true);
     }
   }, []);
+
+  console.log(email);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-
   const handleLogOut = async () => {
     try {
-
       localStorage.removeItem("credentials");
       setIsLoggedIn(false);
     } catch (err) {
@@ -123,7 +134,7 @@ const Nav = () => {
               >
                 <MenuItem onClick={handleClose}>
                   <Typography className="block px-8 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                    UserName
+                    {email}
                   </Typography>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
