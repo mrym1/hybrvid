@@ -6,7 +6,6 @@ import Nav from "../../Components/navbar/nav";
 import { auth, db } from "../../firebase";
 
 
-import StripeCheckout from 'react-stripe-checkout';
 
 const checkout = () => {
   const navigate = useNavigate();
@@ -50,19 +49,14 @@ const checkout = () => {
         <h2 className="text-3xl font-bold mb-4">CheckOut</h2>
         </div>
         <div className="text-center">
-        <StripeCheckout 
-          token={onToken}
-          amount={500} // cents
-          currency="USD"
-          panelLabel="Pay"
-          stripeKey="pk_test_51NJilNAlGtuopEGMD2et1GeSWKihwGfz2mW5dosUylgha42LuontMaZhdtj1D0z5FJvTUyA2CO3h6ch74yQy4n6J003bf7dPIL"
-        >
-        <button
+          <a href="https://buy.stripe.com/test_aEU7tT5o75zn4gM4gh">
+           <button
           className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-12 py-2 rounded-md ml-1 mt-5 duration-500 hover:bg-cyan-500 -mx-4 mb-4"
-        >
+            >
           Pay Now
         </button>
-      </StripeCheckout>
+
+          </a>
       </div>
       </div>
       
