@@ -47,6 +47,7 @@ const Downloader = ({ data }) => {
             {/* </a> */}
             <a
               href={item.url}
+              target="_blank"
               className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-400 to-blue-500 rounded-md ml-8 duration-500 hover:bg-cyan-500"
             >
               Download
