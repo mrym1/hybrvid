@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Nav from "../../Components/navbar/nav";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase";
@@ -87,6 +88,7 @@ const register = () => {
 
   return (
     <div>
+      <Nav />
       <div className="bg-gray-200 text-gray-900">
         <div className="flex items-center h-screen w-full">
           <div className="w-full bg-white rounded shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">

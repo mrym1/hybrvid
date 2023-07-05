@@ -2,6 +2,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Nav from "../../Components/navbar/nav";
 import { auth, db } from "../../firebase";
 
 const Login = () => {
@@ -42,7 +43,7 @@ const Login = () => {
           localStorage.setItem("credentials", credentials);
 
           if (members === false) {
-            navigate("/checkout");
+            navigate("/checkout"); 
           } else {
             navigate("/");
           }
@@ -81,6 +82,7 @@ const Login = () => {
 
   return (
     <div>
+      <Nav />
       <div className="bg-gray-200 text-gray-900">
         <div className="flex items-center h-screen w-full">
           <div className="w-full bg-white rounded shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">
