@@ -11,7 +11,7 @@ import { Box, Typography } from "@mui/material";
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [email, setEmail] = useState(false);
+  const [name, setName] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Drope down Menu
@@ -36,16 +36,17 @@ const Nav = () => {
     // Check if user credentials exist in local storage
     const credentials = localStorage.getItem("credentials");
     if (credentials) {
-      // Split the credentials string into its individual parts
-      const [email, password, members] = credentials.split(":");
-      // Use the email value as needed
-      console.log(email);
-      setEmail(email);
+      const credentialsArray = credentials.split(":");
+
+      const Useremail = credentialsArray[1];
+      const UserName = Useremail.split("@")[0];
+      setName(UserName);
+
       setIsLoggedIn(true);
     }
   }, []);
 
-  console.log(email);
+  // console.log(email);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -134,7 +135,7 @@ const Nav = () => {
               >
                 <MenuItem onClick={handleClose}>
                   <Typography className="block px-8 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                    {email}
+                    {name}
                   </Typography>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>

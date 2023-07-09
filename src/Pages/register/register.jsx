@@ -42,9 +42,10 @@ const register = () => {
         const userDocSnapshot = await getDoc(userDocRef);
         const userData = userDocSnapshot.data();
 
+        const uid = user.uid;
         // members value
         const members = userData && userData.members ? userData.members : false;
-        const credentials = `${email}:${password}:${members || false}`;
+        const credentials = `${uid}:${email}:${password}:${members || false}`;
 
         localStorage.setItem("credentials", credentials);
         await setDoc(doc(db, `users`, user.uid), {

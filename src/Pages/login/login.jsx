@@ -4,11 +4,16 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Nav from "../../Components/navbar/nav";
 import { auth, db } from "../../firebase";
+// import Uploader from "../../Components/uploader/uploader";
+import Home from "../home/home";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [downloaderPropsUID, setDownloaderPropsUID] = useState("");
+  const [downloaderPropsEmail, setDownloaderPropsEmail] = useState("");
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -36,19 +41,31 @@ const Login = () => {
         const userDocSnapshot = await getDoc(userDocRef);
         const userData = userDocSnapshot.data();
         if (userData != null) {
-          console.log(userData.member);
+          // console.log("USERDATA",userData);
 
           const members = userData.member;
-          const credentials = `${email}:${password}:${members}`;
+          const UID = user.uid;
+          console.log("UID", UID);
+          const credentials = `${UID}:${email}:${password}:${members}`;
           localStorage.setItem("credentials", credentials);
 
+
+          // const UID = user.uid;
+          // const UserEmail = user.email;
+
+          // console.log("UID", UID);
+          // console.log("UserEmail", UserEmail);
+
+          // setDownloaderPropsUID(UID);
+          // setDownloaderPropsEmail(UserEmail);
+          // console.log("downloaderPropsUID:", UID);
+          // console.log("downloaderPropsEmail:", UserEmail);
+
           if (members === false) {
-            navigate("/checkout"); 
+            navigate("/checkout");
           } else {
             navigate("/");
           }
-
-          console.log(user);
         } else {
           setError("Please create a new account");
         }
@@ -146,6 +163,12 @@ const Login = () => {
             </Link>
           </div>
         </div>
+        {/* {downloaderPropsUID && downloaderPropsEmail && (
+          <Home
+            UID={downloaderPropsUID}
+            UserEmail={downloaderPropsEmail}
+          />
+        )} */}
       </div>
     </div>
   );

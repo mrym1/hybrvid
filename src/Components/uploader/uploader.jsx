@@ -16,10 +16,30 @@ const uploader = () => {
   var [clipUrls, setClipUrls] = useState([]);
   var [noOfClips, setNoOfClips] = useState(null);
   var [loadbar, setLoadbar] = useState(false);
-
+  var [userID, setUserID] = useState(false);
+  var [userName, setUserName] = useState(false);
+  
   const borderRadiusClass = noOfClips === 1 ? "rounded-full" : "";
   const firstClipClass = noOfClips > 1 ? "rounded-l-lg" : "";
   const lastClipClass = noOfClips > 1 ? "rounded-r-lg" : "";
+
+  useEffect(() => {
+    // Check if user credentials exist in local storage
+    const credentials = localStorage.getItem("credentials");
+    if(credentials){
+    const credentialsArray = credentials.split(":");
+  
+    const UID = credentialsArray[0];
+    const email = credentialsArray[1];
+    const UserName = email.split('@')[0];
+    setUserID(UID)
+    setUserName(UserName)
+  
+    console.log(UID, UserName);
+    }
+  }, []);
+
+
 
   const handleClick = () => {
     setOpen(true);
@@ -125,8 +145,8 @@ const uploader = () => {
       setIsLoading(true);
       var response = await post_api("clip", {
         URL: `${url}`,
-        usr_name: "mrym",
-        usr_id: "1",
+        usr_name: `${userName}`,
+        usr_id: `${userID}`,
       });
       setIsLoading(false);
       setMessage(response.message);
