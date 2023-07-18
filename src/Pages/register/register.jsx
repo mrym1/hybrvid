@@ -40,23 +40,25 @@ const register = () => {
 
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnapshot = await getDoc(userDocRef);
-        const userData = userDocSnapshot.data();
+        // const userData = userDocSnapshot.data();
 
         const uid = user.uid;
         // members value
-        const members = userData && userData.members ? userData.members : false;
-        const credentials = `${uid}:${email}:${password}:${members || false}`;
+        // const members = userData && userData.members ? userData.members : false;
+        // const credentials = `${uid}:${email}:${password}:${members || false}`;
+        const credentials = `${uid}:${email}:${password}`;
 
         localStorage.setItem("credentials", credentials);
         await setDoc(doc(db, `users`, user.uid), {
-          member: false,
+          // member: false,
           createdAt: Timestamp.fromDate(new Date()),
         })
           .then((a) => {
             setLoading(false);
             console.log("User Created");
 
-            if (credentials && credentials.includes(":false")) {
+            // if (credentials && credentials.includes(":false")) {
+            if (credentials) {
               navigate("/checkout");
             }
           })

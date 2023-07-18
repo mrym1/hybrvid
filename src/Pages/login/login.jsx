@@ -43,10 +43,11 @@ const Login = () => {
         if (userData != null) {
           // console.log("USERDATA",userData);
 
-          const members = userData.member;
+          // const members = userData.member;
           const UID = user.uid;
           console.log("UID", UID);
-          const credentials = `${UID}:${email}:${password}:${members}`;
+          // const credentials = `${UID}:${email}:${password}:${members}`;
+          const credentials = `${UID}:${email}:${password}`;
           localStorage.setItem("credentials", credentials);
 
 
@@ -61,11 +62,11 @@ const Login = () => {
           // console.log("downloaderPropsUID:", UID);
           // console.log("downloaderPropsEmail:", UserEmail);
 
-          if (members === false) {
-            navigate("/checkout");
-          } else {
+          // if (members === false) {
+          //   navigate("/checkout");
+          // } else {
             navigate("/");
-          }
+          // }
         } else {
           setError("Please create a new account");
         }
