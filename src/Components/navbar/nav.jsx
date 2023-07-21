@@ -55,7 +55,9 @@ const Nav = () => {
   const handleLogOut = async () => {
     try {
       localStorage.removeItem("credentials");
+      localStorage.removeItem("url");
       setIsLoggedIn(false);
+      window.location.reload();
     } catch (err) {
       console.error(err);
     }

@@ -14,11 +14,45 @@ const uploader = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   var [clipUrls, setClipUrls] = useState([]);
-  var [noOfClips, setNoOfClips] = useState(null);
-  var [loadbar, setLoadbar] = useState(false);
-  var [userID, setUserID] = useState(false);
-  var [userName, setUserName] = useState(false);
-  
+  const [noOfClips, setNoOfClips] = useState(null);
+  const [loadbar, setLoadbar] = useState(false);
+  const [userID, setUserID] = useState(false);
+  const [userName, setUserName] = useState(false);
+  const [url, setUrl] = useState(localStorage.getItem("url") || "");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const inputRef = useRef(null);
+
+  const [loadbarComplete, setLoadbarComplete] = useState(false);
+
+  const totalTimeInSeconds = 40 * 60; // 40 minutes in seconds
+
+  const [remainingTime, setRemainingTime] = useState(totalTimeInSeconds);
+  const [progressPercentage, setProgressPercentage] = useState(100);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemainingTime((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    // Calculate the progress percentage
+    const percentage =
+      ((totalTimeInSeconds - remainingTime) / totalTimeInSeconds) * 100;
+    setProgressPercentage(percentage);
+  }, [remainingTime]);
+
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
   const borderRadiusClass = noOfClips === 1 ? "rounded-full" : "";
   const firstClipClass = noOfClips > 1 ? "rounded-l-lg" : "";
   const lastClipClass = noOfClips > 1 ? "rounded-r-lg" : "";
@@ -26,20 +60,18 @@ const uploader = () => {
   useEffect(() => {
     // Check if user credentials exist in local storage
     const credentials = localStorage.getItem("credentials");
-    if(credentials){
-    const credentialsArray = credentials.split(":");
-  
-    const UID = credentialsArray[0];
-    const email = credentialsArray[1];
-    const UserName = email.split('@')[0];
-    setUserID(UID)
-    setUserName(UserName)
-  
-    console.log(UID, UserName);
+    if (credentials) {
+      const credentialsArray = credentials.split(":");
+
+      const UID = credentialsArray[0];
+      const email = credentialsArray[1];
+      const UserName = email.split("@")[0];
+      setUserID(UID);
+      setUserName(UserName);
+
+      console.log(UID, UserName);
     }
   }, []);
-
-
 
   const handleClick = () => {
     setOpen(true);
@@ -70,10 +102,6 @@ const uploader = () => {
   //   setShowUploadComponent(true);
   // };
 
-  const [url, setUrl] = useState(localStorage.getItem("url") || "");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const inputRef = useRef(null);
 
   useEffect(() => {
     const storedUrl = localStorage.getItem("url");
@@ -166,7 +194,6 @@ const uploader = () => {
       }
     }
   };
-
   const checkClips = async () => {
     try {
       console.log("current clip ", `clip/${clipUrls.length - 1}`);
@@ -181,6 +208,7 @@ const uploader = () => {
         console.log("rrsponsez length:  ", clipUrls);
         if (clipUrls.length == response.result.clip_count) {
           clearInterval(intervalId);
+          setLoadbarComplete(true);
         } else {
           clipUrls = [...clipUrls, ""];
           setClipUrls(clipUrls);
@@ -273,11 +301,19 @@ const uploader = () => {
 
         <div className="flex flex-col items-center justify-center pt-4 pb-4 m-10 h-70 border-2 border-black-400 border-dashed rounded-lg md:w-1/3 mx-auto max-sm:mx-6">
           {!message && responseSend && (
-            <p className="text-sm text-center py-3">
-              Fetching the video, please wait ...
-            </p>
+            <>
+              <p className="text-sm text-center p-3">
+                To download all the clips now please stay on the screen while
+                clips are generated. This may take around 30 minutes. In case
+                you leave the screen, the clips will be shared with you over
+                your email.
+              </p>
+              <p className="text-sm text-center p-3">
+                Fetching the video, please wait ...
+              </p>
+            </>
           )}
-          {loadbar ? (
+          {loadbar && !loadbarComplete ? (
             <div>
               {noOfClips != null && (
                 <div className="flex justify-center items-center">
@@ -315,63 +351,80 @@ const uploader = () => {
               {message && <p className="text-sm text-center py-3">{message}</p>}
             </div>
           ) : (
-            <div>
-              {isLoading ? (
-                <div className="px-5 py-3 my-3 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
-                  Loading...
-                </div>
+            <>
+              {loadbarComplete ? (
+                <p className="text-sm text-center p-3">
+                  All Clips are successfully generated. Refresh the page to
+                  create clips for another long video.
+                </p>
               ) : (
                 <div>
-                  {url ? (
-                    <div className="flex flex-col items-center justify-center">
-                      <div>
-                        <button
-                          type="button"
-                          className="bg-gradient-to-r from-blue-400 to-blue-500 text-white text-lg px-6 py-3 rounded-md  duration-500 hover:bg-cyan-500 mt-4"
-                          onClick={handleCreateLogin}
-                        >
-                          Create Clips
-                        </button>
-                        <p
-                          className="text-blue-500 cursor-pointer underline py-3"
-                          onClick={handleClearUrl}
-                        >
-                          Change YouTube URL
-                        </p>
-                      </div>
+                  {isLoading ? (
+                    <div className="text-center">
+                    <div className="text-lg font-medium mb-3">
+                      Timer: {formatTime(remainingTime)}
                     </div>
+                    <div className="relative w-64 h-4 bg-blue-200 rounded-full">
+                      <div
+                        className="absolute left-0 top-0 h-full bg-blue-500 rounded-full"
+                        style={{ width: `${progressPercentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
                   ) : (
-                    <div className="flex items-center mb-4 border border-black-300 p-3 rounded">
-                      <div className="relative w-full ">
-                        <input
-                          type="text"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                          placeholder="Paste YouTube URL"
-                          value={url}
-                          onChange={handleInputChange} // Update this line
-                          autoComplete="off"
-                          required
-                          ref={inputRef}
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        className="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-red-400 rounded-lg hover:bg-blue-400"
-                        onClick={handlePaste}
-                      >
-                        Paste
-                      </button>
-                    </div>
-                  )}
+                    <div>
+                      {url ? (
+                        <div className="flex flex-col items-center justify-center">
+                          <div>
+                            <button
+                              type="button"
+                              className="bg-gradient-to-r from-blue-400 to-blue-500 text-white text-lg px-6 py-3 rounded-md  duration-500 hover:bg-cyan-500 mt-4"
+                              onClick={handleCreateLogin}
+                            >
+                              Create Clips
+                            </button>
+                            <p
+                              className="text-blue-500 cursor-pointer underline py-3"
+                              onClick={handleClearUrl}
+                            >
+                              Change YouTube URL
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center mb-4 border border-black-300 p-3 rounded">
+                          <div className="relative w-full ">
+                            <input
+                              type="text"
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                              placeholder="Paste YouTube URL"
+                              value={url}
+                              onChange={handleInputChange} // Update this line
+                              autoComplete="off"
+                              required
+                              ref={inputRef}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-red-400 rounded-lg hover:bg-blue-400"
+                            onClick={handlePaste}
+                          >
+                            Paste
+                          </button>
+                        </div>
+                      )}
 
-                  {errorMessage && (
-                    <p className="text-red-500 text-xs text-center py-3">
-                      {errorMessage}
-                    </p>
+                      {errorMessage && (
+                        <p className="text-red-500 text-xs text-center py-3">
+                          {errorMessage}
+                        </p>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
-            </div>
+            </>
           )}
         </div>
       </div>
