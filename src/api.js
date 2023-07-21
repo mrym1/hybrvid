@@ -14,11 +14,10 @@ export const post_api = async (url, body) => {
       },
       data: body,
     });
-    // console.log(response, "Response"); 
+    console.log( "Response",response); 
     // Process the response and return the desired result
 
-    if (response.data.status === "failed") {
-      // alert(response.data);
+    if (response.data.status === "failed" || response.status!=200) {
       return null;
     } else {
       return response.data;
@@ -31,7 +30,7 @@ export const post_api = async (url, body) => {
       );
     } else {
       // Handle other types of errors
-      console.error("An error occurred:", error.message);
+      console.log("An error occurred:", error);
     }
     console.log(error);
     // alert(error.response.data.message);

@@ -176,12 +176,12 @@ const uploader = () => {
         usr_name: `${userName}`,
         usr_id: `${userID}`,
       });
-      setIsLoading(false);
-      setMessage(response.message);
+      setMessage('The video is too short or maybe its restricted. Please change video Url');
       handleClick();
       if (response == null) {
         console.log("error");
       } else {
+        setMessage(response.message);
         setNoOfClips(0);
         setLoadbar(true);
         clipUrls = [...clipUrls, ""];
@@ -202,6 +202,7 @@ const uploader = () => {
 
       if (response == null) {
       } else {
+        setIsLoading(false);
         setNoOfClips(response.result.clip_count);
         clipUrls[clipUrls.length - 1] = response.result.clip_url;
         setClipUrls([...clipUrls]);
@@ -362,7 +363,7 @@ const uploader = () => {
                   {isLoading ? (
                     <div className="text-center">
                     <div className="text-lg font-medium mb-3">
-                      Timer: {formatTime(remainingTime)}
+                      Estimated Time: {formatTime(remainingTime)}
                     </div>
                     <div className="relative w-64 h-4 bg-blue-200 rounded-full">
                       <div
