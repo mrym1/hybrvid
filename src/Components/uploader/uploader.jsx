@@ -180,6 +180,7 @@ const uploader = () => {
       handleClick();
       if (response == null) {
         console.log("error");
+        setIsLoading(false);
       } else {
         setMessage(response.message);
         setNoOfClips(0);
