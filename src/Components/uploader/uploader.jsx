@@ -363,9 +363,9 @@ const uploader = () => {
                 <div>
                   {isLoading ? (
                     <div className="text-center">
-                    <div className="text-lg font-medium mb-3">
+                    {/* <div className="text-lg font-medium mb-3">
                       Estimated Time: {formatTime(remainingTime)}
-                    </div>
+                    </div> */}
                     <div className="relative w-64 h-4 bg-blue-200 rounded-full">
                       <div
                         className="absolute left-0 top-0 h-full bg-blue-500 rounded-full"
