@@ -25,7 +25,7 @@ const uploader = () => {
 
   const [loadbarComplete, setLoadbarComplete] = useState(false);
 
-  const totalTimeInSeconds = 40 * 60; // 40 minutes in seconds
+  const totalTimeInSeconds = 30 * 60; // 40 minutes in seconds
 
   const [remainingTime, setRemainingTime] = useState(totalTimeInSeconds);
   const [progressPercentage, setProgressPercentage] = useState(100);
